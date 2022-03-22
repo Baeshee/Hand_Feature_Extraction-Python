@@ -54,13 +54,15 @@ while True:
                 'test_time': dt.now().strftime("%H:%M:%S"),
                 'annoted_image': f"{path}_{i}.png"}
         
-        if os.path.exists("test_results.csv"):
-            df = pd.read_csv("test_results.csv")
+        if os.path.exists("results/test_results.csv"):
+            df = pd.read_csv("results/test_results.csv")
         else:
             df = pd.DataFrame()
         
-        df = df.append(dict, ignore_index=True)
-        df.to_csv('test_results.csv', index=True)
+        df_dict = pd.DataFrame(dict)
+        df = pd.concat([df, df_dict], ignore_index=True)
+        df.to_csv('results/test_results.csv', encoding='utf-8', index=False)
+        df.to_excel('results/test_results.xlsx', encoding='utf-8', index=False)
         
     # Display
     cv.imshow("Camera Capture", img)
