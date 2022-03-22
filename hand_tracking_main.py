@@ -9,13 +9,20 @@ from hand_detect_module import HandDetect
 cap = cv.VideoCapture(0)
 detector = HandDetect(detectCon=0.8, maxHands=2)
 while True:
+    
+    # Video capture and the action to start the analysis
     succes, img = cap.read()
     if cv.waitKey(1) & 0xFF == ord('s'): 
+        
+        # Detecting the hands of the person by using the camera feeder
+        # combined with 2 timestamps to calculate the duration of the
+        # processing request
         start_time = dt.now()
         hands, img = detector.staticImage(img)
         end_time = dt.now()
         duration = (end_time - start_time).total_seconds()
         
+        # Create a image where the landmarks are stored
         i = 0
         path = "images/annoted_image"
         while os.path.exists(f"{path}_{i}.png"):
@@ -31,6 +38,8 @@ while True:
         yList = []
         zList = []
         
+        # Extracting all information that are stored in the variables
+        # so they can be saved to a csv and excel for later use
         if hands:
             for h in range(0, len(hands)):
                 for v in range(0, len(hands[0]['lmList'])):
@@ -54,6 +63,9 @@ while True:
                 'test_time': dt.now().strftime("%H:%M:%S"),
                 'annoted_image': f"{path}_{i}.png"}
         
+        # Check if there is a csv and a xslx file otherwise
+        # create a new dataframe and save all the values to the
+        # dataframe so they can be saved
         if os.path.exists("results/test_results.csv"):
             df = pd.read_csv("results/test_results.csv")
         else:
@@ -64,7 +76,7 @@ while True:
         df.to_csv('results/test_results.csv', encoding='utf-8', index=False)
         df.to_excel('results/test_results.xlsx', encoding='utf-8', index=False)
         
-    # Display
+    # Display the camera view
     cv.imshow("Camera Capture", img)
     
     if cv.waitKey(1) & 0xFF == ord('q'): 

@@ -40,9 +40,14 @@ class HandDetect:
                         "PINKY_PIP",
                         "PINKY_DIP",
                         "PINKY_TIP"]
-        
+    
+    # Function which takes the photo from the main function
+    # and extracts all landmarks and hand features and also
+    # drawing the landmarks on the image    
     def staticImage(self, img, draw=True, flipType=True):
-        # Creates the start timestamp
+        
+        # Creates the image and extracting the size and
+        # converts it to a centrain color mode
         imageRGB = cv.cvtColor(img, cv.COLOR_BGR2RGB)
         self.result = self.hands.process(imageRGB)
         dHands = []
@@ -53,6 +58,8 @@ class HandDetect:
                 myHand = {}
                 mylmList = []
                 
+                # Extracting the x, y and z coordinated form the handlandmarks
+                # and saving them to a dictionary
                 for id, lm in enumerate(lMarks.landmark):
                     px, py, pz = int(lm.x * w), int(lm.y * h), int(lm.z * w)
                     mylmList.append({'name': self.lmNames[id],
@@ -64,6 +71,9 @@ class HandDetect:
                 myHand["lmList"] = mylmList
                 myHand["score"] = hType.classification[0].score
                 
+                # Checks which hand is being identified
+                # Note: if there are 2 hands returns both their hTypes
+                # for more explicit distinction
                 if flipType:
                     if hType.classification[0].label == "Right":
                         myHand["type"] = "Left"
@@ -73,11 +83,12 @@ class HandDetect:
                     myHand["type"] = hType.classification[0].label
                 dHands.append(myHand)
                 
+                # Draws the landmarks on the image
                 if draw:
                     self.drawUtils.draw_landmarks(img, lMarks, self.mpHands.HAND_CONNECTIONS, self.drawStyle.get_default_hand_landmarks_style(),
                     self.drawStyle.get_default_hand_connections_style())
                 
-
+        # Returning statement
         if draw:
             return dHands, img
         else:
