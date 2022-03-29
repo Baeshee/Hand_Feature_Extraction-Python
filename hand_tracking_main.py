@@ -7,6 +7,8 @@ from datetime import datetime as dt
 from hand_detect_module import HandDetect
 
 cap = cv.VideoCapture(0)
+cap.set(cv.CAP_PROP_FRAME_WIDTH, 1280)
+cap.set(cv.CAP_PROP_FRAME_HEIGHT, 720)
 detector = HandDetect(detectCon=0.8, maxHands=2)
 while True:
     
@@ -53,8 +55,8 @@ while True:
         
         dict = {'hand_type': hTypes,
                 'hand_score': hScore,
-                'landmark_name': lmNames,
                 'landmark_id': lmIds,
+                'landmark_name': lmNames,
                 'x_value': xList,
                 'y_value': yList,
                 'z_value': zList,
@@ -74,7 +76,7 @@ while True:
         df_dict = pd.DataFrame(dict)
         df = pd.concat([df, df_dict], ignore_index=True)
         df.to_csv('results/test_results.csv', encoding='utf-8', index=False)
-        df.to_excel('results/test_results.xlsx', encoding='utf-8', index=False)
+        # df.to_excel('results/test_results.xlsx', encoding='utf-8', index=False)
         
     # Display the camera view
     cv.imshow("Camera Capture", img)
