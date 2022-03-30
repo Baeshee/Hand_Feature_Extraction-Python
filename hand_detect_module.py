@@ -63,7 +63,7 @@ class HandDetect:
                 for id, lm in enumerate(lMarks.landmark):
                     px, py, pz = int(lm.x * w), int(lm.y * h), int(lm.z * w)
                     mylmList.append({'name': self.lmNames[id],
-                                     'id': id,
+                                    'id': id,
                                     'x_value': px,
                                     'y_value': py,
                                     'z_value': pz})
